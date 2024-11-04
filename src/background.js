@@ -8,54 +8,50 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.type === 'GREETINGS') {
-    const message = `Hi ${
-      sender.tab ? 'Con' : 'Pop'
-    }, my name is Bac. I am from Background. It's great to hear from you.`;
+  if (request.type === 'FETCH_DATA') {
+    console.log('接收到消息请求:', request);
 
-    // Log message coming from the `request` parameter
-    console.log(request.payload.message);
-    // Send a response message
-    sendResponse({
-      message,
-    });
-  }
-
-  if (request.type === 'ANALYSIS') {
-    let topicId = request.payload.message;
-    console.log('接收到Topic ID:', topicId);
-    requestV2Api(topicId);
-    // Log message coming from the `request` parameter
-    console.log('FROM CONTENT=====>>>>', request.payload.message);
-    // Send a response message
-    let message = requestV2Api(topicId);
-    sendResponse({ message });
+    // 使用异步函数来处理数据获取
+    (async () => {
+      try {
+        const data = await v2Topic(request.payload.topicId);
+        // 返回结果给 content.js
+        sendResponse({ success: true, data });
+      } catch (error) {
+        console.error('获取数据时出错:', error);
+        sendResponse({ success: false, error: '数据获取失败' });
+      }
+    })();
+    // 返回 true 表示 sendResponse 是异步调用
+    return true;
   }
 });
 
-async function requestV2Api(topicId) {
-  console.log('请求V2EX API:', topicId);
+async function genimiAnalysis(topicId) {
+  let topic = v2Topic(topicId);
+  const comments = v2Comments(topicId);
+
+  const prompt = buildPrompt(topic.title, topic.content, comments);
+  return await postAnalysis(prompt);
+}
+
+async function v2Topic(topicId) {
+  console.log('请求V2EX TOPIC API:', topicId);
   // 创建请求
-  let topic;
-  await fetch(`https://www.v2ex.com/api/v2/topics/${topicId}`, {
+  return fetch('https://www.v2ex.com/api/v2/topics/' + topicId, {
     method: 'GET',
     headers: {
-      Authorization: 'Bearer ac1d9a0f-21e2-44b9-9154-07946169bf0a', // 如果 API 使用 Bearer Token
+      'Authorization': 'Bearer ac1d9a0f-21e2-44b9-9154-07946169bf0a', //使用
     },
   })
-    .then((response) => {
-      console.log(response);
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-    })
+    .then((response) => response.json())
     .then((data) => {
-      topic = data;
-      console.log('请求V2EX API结果:', topic); // Log the topic data here
+      console.log('API 返回数据:', data.result);
+      return data.result;
     })
-    .catch((error) => console.error('Error:', error));
-
-  console.log('请求V2EX API结果:', topic);
+    .catch((errors) => {
+      console.error('API 请求失败:', errors);
+    });
 }
 
 // const prompt = buildPrompt();

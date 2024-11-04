@@ -19,19 +19,6 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 //   `Page title is: '${pageTitle}' - evaluated by Chrome extension's 'contentScript.js' file`
 // );
 
-// Communicate with background file by sending a message
-chrome.runtime.sendMessage(
-  {
-    type: 'GREETINGS',
-    payload: {
-      message: 'Hello, my name is Con. I am from ContentScript.',
-    },
-  },
-  (response) => {
-    console.log(response.message);
-  }
-);
-
 // 获取当前页面的URL
 console.log('URL:', window.location.href);
 // https://www.v2ex.com/t/1086357#reply70
@@ -41,16 +28,28 @@ console.log('Topic ID:', topicId);
 // 等待处理结果
 let jsonData = {};
 
+
 chrome.runtime.sendMessage(
   {
-    type: 'ANALYSIS',
+    type: 'FETCH_DATA',
     payload: {
-      message: topicId,
+      topicId: topicId,
     },
   },
   (response) => {
-    console.log('RESPONSE==========>',response.message);
-    jsonData = response.message;
+    // 检查是否有错误
+    if (chrome.runtime.lastError) {
+      console.error("消息处理出错:", chrome.runtime.lastError.message);
+      return;
+    }
+    // 处理来自 background.js 的响应
+    if (response && response.success) {
+      console.log("接收到的数据:", response.data);
+    } else if (response && !response.success) {
+      console.error("后台返回的错误:", response.error);
+    } else {
+      console.error("无效的响应:", response);
+    }
   }
 );
 
