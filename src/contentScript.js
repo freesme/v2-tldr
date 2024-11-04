@@ -11,6 +11,8 @@
 // For more information on Content Scripts,
 // See https://developer.chrome.com/extensions/content_scripts
 
+import { GoogleGenerativeAI   } from "@google/generative-ai";
+
 // Log `title` of current active web page
 const pageTitle = document.head.getElementsByTagName('title')[0].innerHTML;
 console.log(
@@ -41,3 +43,30 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   sendResponse({});
   return true;
 });
+
+const title = document.querySelector('#Main > div:nth-child(2)');
+console.log("don't find title")
+if (title) {
+  console.log('find', title);
+}
+
+const input = document.createElement('div');
+input.className = 'cell';
+
+input.style.backgroundColor = "blue";
+title.appendChild(input);
+
+
+const apiKey = "AIzaSyCjn3NLcHXn3YySI5MNGkX1bVyZKhGoVdY";
+
+const genAI = new GoogleGenerativeAI(apiKey);
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+const prompt = "hello";
+
+console.log("Generating content...");
+
+const result = await model.generateContent(prompt);
+console.log(result.response.text());
+
+

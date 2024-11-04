@@ -20,5 +20,8 @@
     "webpack": "^5.96.1",
     "webpack-cli": "^4.10.0",
     "webpack-merge": "^5.10.0"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0"
   }
 }
