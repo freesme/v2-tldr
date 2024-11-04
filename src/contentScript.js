@@ -47,7 +47,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 const apiKey = 'AIzaSyCjn3NLcHXn3YySI5MNGkX1bVyZKhGoVdY';
 
 const systemInstruction = `你是一个地球上最厉害的话题评论分析总结机器人，注意严谨分析，我将会使用json格式给你发送
-话题的主题（topic），话题内容（content），和评论（comments）,需要总结评论的观点倾向数量前几名（limit）
+话题的主题（topic），话题内容（content），和评论（comments）,需要总结【5】种评论的观点
 你需要将主题和内容分析总结，对评论进行观点情感分析总结，并估算观点倾向的占比，然后将结果以json格式文本返回给我，不要添加格式说明前缀，返回结果json的格式及要求是：
 {
   "topic": "题目和题目内容内容的分析总结",
@@ -69,7 +69,6 @@ const model = genAI.getGenerativeModel({
 
 const prompt = `{
   "topic": "打算换个折叠屏，请问 Teams 和 MS Authenticator 在国内的兼容性",
-  "limit":5,
   "content":"最近 iPhone 上新，但是没什么新意，所以考虑换个 Android 折叠屏试试，暂时看中了 Xfold3
 
 现在顾虑的主要就是工作中需要使用的一些软件的兼容性，具体来讲就是 MS Authenticaotr 和 Teams ，尤其是 Authenticator ，基本上每天都要用几次。
