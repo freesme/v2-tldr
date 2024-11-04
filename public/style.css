@@ -1,0 +1,56 @@
+.progress-bar {
+  display: flex;
+  height: 12px; /* 增加高度，让进度条更明显 */
+  background-color: #444c56;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 15px; /* 增加间距 */
+  /*border: 1px solid #444c56;*/
+}
+
+.bar {
+  height: 100%;
+}
+
+.legend {
+  display: flex;
+  flex-direction: column; /* 使图例垂直排列 */
+  gap: 15px; /* 增加图例项之间的间距 */
+}
+
+.legend-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px; /* 增加左侧颜色图标和文字内容之间的间距 */
+  /*margin-bottom: 5px;*/
+}
+
+.legend-color {
+  min-width: 12px; /* 增加最小宽度，防止图标被挤压 */
+  height: 12px; /* 设置固定高度 */
+  border-radius: 50%;
+  margin-top: 3px; /* 调整位置，使其在行内居中 */
+}
+
+.legend-text {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.legend-text span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px; /* 标题和占比之间的间距 */
+}
+
+.legend-text strong {
+  font-weight: bold;
+}
+
+.legend-text small {
+  font-size: 12px;
+  color: #8b949e;
+  /*margin-top: 3px; !* 详情内容距离标题的间距 *!*/
+}
