@@ -14,7 +14,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     // 使用异步函数来处理数据获取
     (async () => {
       try {
-        const data = await v2Topic(request.payload.topicId);
+        const data = await genimiAnalysis(request.payload.topicId);
         // 返回结果给 content.js
         sendResponse({ success: true, data });
       } catch (error) {
@@ -28,30 +28,48 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 async function genimiAnalysis(topicId) {
-  let topic = v2Topic(topicId);
-  const comments = v2Comments(topicId);
+  let topic = await v2Topic(topicId);
+  const comments = await allComments(topicId);
 
   const prompt = buildPrompt(topic.title, topic.content, comments);
   return await postAnalysis(prompt);
 }
 
-async function v2Topic(topicId) {
-  console.log('请求V2EX TOPIC API:', topicId);
-  // 创建请求
-  return fetch('https://www.v2ex.com/api/v2/topics/' + topicId, {
+
+async function allComments(topicId) {
+  const comments = [];
+  let p = 1;
+  let result = await v2Comments(topicId, p);
+  while (result.length > 0) {
+    comments.push(...result);
+    p++;
+    result = v2Comments(topicId, p);
+  }
+  return comments;
+}
+
+async function fetchFromV2EX(endpoint) {
+  return fetch(endpoint, {
     method: 'GET',
     headers: {
-      'Authorization': 'Bearer ac1d9a0f-21e2-44b9-9154-07946169bf0a', //使用
+      Authorization: 'Bearer ac1d9a0f-21e2-44b9-9154-07946169bf0a',
     },
   })
     .then((response) => response.json())
-    .then((data) => {
-      console.log('API 返回数据:', data.result);
-      return data.result;
-    })
+    .then((data) => data.result)
     .catch((errors) => {
       console.error('API 请求失败:', errors);
     });
+}
+
+async function v2Topic(topicId) {
+  console.log('请求V2EX TOPIC API:', topicId);
+  return fetchFromV2EX('https://www.v2ex.com/api/v2/topics/' + topicId);
+}
+
+async function v2Comments(topicId, p) {
+  console.log('请求V2EX COMMENTS API:', topicId, 'p=', p);
+  return fetchFromV2EX('https://www.v2ex.com/api/v2/topics/' + topicId + '/replies?p=' + p);
 }
 
 // const prompt = buildPrompt();

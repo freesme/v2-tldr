@@ -27,7 +27,14 @@ const topicId = window.location.href.match(/\/t\/(\d+)/)[1];
 console.log('Topic ID:', topicId);
 // 等待处理结果
 let jsonData = {};
-
+const legendColors = [
+  '#f1e05a',
+  '#563d7c',
+  '#e34c26',
+  '#2668e3',
+  '#97c98f',
+  '#ffc400',
+];
 
 chrome.runtime.sendMessage(
   {
@@ -39,42 +46,21 @@ chrome.runtime.sendMessage(
   (response) => {
     // 检查是否有错误
     if (chrome.runtime.lastError) {
-      console.error("消息处理出错:", chrome.runtime.lastError.message);
+      console.error('消息处理出错:', chrome.runtime.lastError.message);
       return;
     }
     // 处理来自 background.js 的响应
     if (response && response.success) {
-      console.log("接收到的数据:", response.data);
+      console.log('接收到的数据:', response.data);
+      jsonData = response.data;
+      buildPageDom(jsonData.topic, jsonData.comments, legendColors);
     } else if (response && !response.success) {
-      console.error("后台返回的错误:", response.error);
+      console.error('后台返回的错误:', response.error);
     } else {
-      console.error("无效的响应:", response);
+      console.error('无效的响应:', response);
     }
   }
 );
-
-// Listen for message
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.type === 'COUNT') {
-    console.log(`Current count is ${request.payload.count}`);
-  }
-
-  // Send an empty response
-  // See https://github.com/mozilla/webextension-polyfill/issues/130#issuecomment-531531890
-  sendResponse({});
-  return true;
-});
-
-const legendColors = [
-  '#f1e05a',
-  '#563d7c',
-  '#e34c26',
-  '#2668e3',
-  '#97c98f',
-  '#ffc400',
-];
-
-// buildPageDom(jsonData.topic, jsonData.comments, legendColors);
 
 /**
  * 构建页面DOM
@@ -83,8 +69,10 @@ const legendColors = [
  * @param legendColors 图例颜色
  */
 function buildPageDom(topicSummery, data, legendColors) {
+  console.log('构建页面DOM:', topicSummery, data, legendColors);
   // 在主题下面添加展示区域
-  const parent = document.querySelector('#Main > div:nth-child(2)');
+  // const parent = document.querySelector('#Main > div:nth-child(2)');
+  const parent = document.querySelector('#Rightbar');
 
   console.log('find title');
   if (parent) {
@@ -93,10 +81,11 @@ function buildPageDom(topicSummery, data, legendColors) {
 
   // 创建容器元素
   const container = document.createElement('div');
-  container.className = 'cell';
+  // container.className = 'cell';
+  container.className = 'cell box';
 
   const topic = document.createElement('div');
-  topic.innerHTML = `<h4 style="line-height: 1.2">${topicSummery}</h4>`;
+  topic.innerHTML = `<h4 style="line-height: 1.4">${topicSummery}</h4>`;
   container.appendChild(topic);
 
   // 创建进度条容器
@@ -132,7 +121,8 @@ function buildPageDom(topicSummery, data, legendColors) {
     // 创建 legendText，将标题和占比放在一行，详情在新行
     const legendText = document.createElement('div');
     legendText.className = 'legend-text';
-    legendText.innerHTML = `<span><strong>${item.name}</strong> ${item.percentage}%</span><br><small>${item.details}</small>`;
+    legendText.innerHTML = `<!--<span><strong>${item.name}</strong> ${item.percentage}%</span><br><small>${item.details}</small>-->`;
+    legendText.innerHTML = `<span><strong>${item.name}</strong></span><br><small>${item.details}</small>`;
 
     legendItem.appendChild(legendColor);
     legendItem.appendChild(legendText);
