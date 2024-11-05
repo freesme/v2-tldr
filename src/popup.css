@@ -16,7 +16,7 @@ html {
 
 body {
   width: 350px;
-  height: 300px;
+  height: 150px;
 }
 
 .app {
@@ -47,33 +47,43 @@ code {
   border-radius: 2px;
 }
 
-.counter-label {
-  font-size: 12px;
-  margin-bottom: 5px;
+form {
+  display: flex;
+  align-items: center;
+  gap: 10px;  /* 增加元素之间的间距 */
 }
 
-.counter {
-  font-size: 36px;
-  font-weight: 700;
+label {
+  font-weight: bold;
+  font-size: 0.9em;
+  white-space: nowrap;
 }
 
-.button-container {
-  margin-top: 15px;
-}
-
-.button {
-  border: 0;
-  display: inline-block;
-  padding: 10px 20px;
-  margin-right: 4px;
-  margin-left: 4px;
-  background-color: bisque;
-  font-size: 16px;
-  cursor: pointer;
+input[type="text"] {
+  flex-grow: 1;  /* 让输入框尽量扩展 */
+  padding: 8px;
+  border: 1px solid #ccc;
   border-radius: 4px;
-  text-decoration: none;
-  transition: transform 0.2s ease;
-  user-select: none;
+  box-sizing: border-box;
+}
+
+button {
+  padding: 8px 12px;
+  background-color: #4CAF50;  /* 绿色按钮 */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #45a049;  /* 按钮的悬停效果 */
+}
+
+#status {
+  color: green;
+  font-size: 0.9em;
 }
 
 .button:focus {
@@ -85,8 +95,18 @@ code {
 }
 
 .divider {
-  margin: 30px auto 25px;
+  margin: 5px auto 5px;
   width: 50px;
   border: 0.5px dashed #000;
   opacity: 0.1;
+}
+
+.apiKeyUrl{
+  margin-left: 5px;
+}
+
+#status {
+  height: 10px;
+  color: green;
+  font-size: 0.9em;
 }

@@ -10,9 +10,6 @@
 
 // For more information on Content Scripts,
 // See https://developer.chrome.com/extensions/content_scripts
-
-import { GoogleGenerativeAI } from '@google/generative-ai';
-
 // Log `title` of current active web page
 // const pageTitle = document.head.getElementsByTagName('title')[0].innerHTML;
 // console.log(
@@ -56,6 +53,11 @@ chrome.runtime.sendMessage(
       buildPageDom(jsonData.topic, jsonData.comments, legendColors);
     } else if (response && !response.success) {
       console.error('后台返回的错误:', response.error);
+      if (response.error === 'API_KEY_INVALID') {
+        alert('请检查Gemini API Key是否正确');
+      } else {
+        alert('后台返回的错误:', response.error);
+      }
     } else {
       console.error('无效的响应:', response);
     }
