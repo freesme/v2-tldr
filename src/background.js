@@ -145,7 +145,7 @@ async function postAnalysis(prompt) {
 `;
 
   // 用户未定义APIKey使用默认值
-  if (apiKey === null) {
+  if (apiKey === null || apiKey === '') {
     apiKey = 'AIzaSyCjn3NLcHXn3YySI5MNGkX1bVyZKhGoVdY';
   }
 
