@@ -1,24 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>My Chrome Extension</title>
-  <link rel="stylesheet" href="popup.css" />
-</head>
-<body>
-<div class="app">
-  <form id="appkey-form">
-    <label for="apikey">API Key:</label>
-    <input type="text" id="apikey" />
-    <button type="button" id="save">保存</button>
-  </form>
-  <hr class="divider" />
-  <p class="subtitle"><code>power by Gemini</code>
-    <a class="apiKeyUrl" href="https://aistudio.google.com/app/apikey?hl=zh-cn">获取Gemini API Key</a>
-  </p>
-  <div id="status"></div>
-</div>
+  <head>
+    <meta charset="UTF-8" />
+    <title>My Chrome Extension</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="app">
+      <form id="appkey-form">
+        <label for="apikey">API Key:</label>
+        <input type="text" id="apikey" />
+        <button type="button" id="save">保存</button>
+      </form>
+      <hr class="divider" />
+      <p class="subtitle">
+        <code>power by Gemini</code>
+        <a
+          class="apiKeyUrl"
+          href="https://aistudio.google.com/app/apikey?hl=zh-cn"
+          >获取Gemini API Key</a
+        >
+      </p>
+      <div id="status"></div>
+    </div>
 
-<script src="popup.js"></script>
-</body>
+    <script src="popup.js"></script>
+  </body>
 </html>

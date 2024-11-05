@@ -16,23 +16,13 @@
     "default_title": "V2 Tldr",
     "default_popup": "popup.html"
   },
-  "permissions": [
-    "activeTab",
-    "scripting",
-    "storage"
-  ],
+  "permissions": ["activeTab", "scripting", "storage"],
   "content_scripts": [
     {
-      "matches": [
-        "https://www.v2ex.com/t/*"
-      ],
+      "matches": ["https://www.v2ex.com/t/*"],
       "run_at": "document_idle",
-      "js": [
-        "contentScript.js"
-      ],
-      "css": [
-        "style.css"
-      ]
+      "js": ["contentScript.js"],
+      "css": ["style.css"]
     }
   ]
 }

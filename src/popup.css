@@ -50,7 +50,7 @@ code {
 form {
   display: flex;
   align-items: center;
-  gap: 10px;  /* 增加元素之间的间距 */
+  gap: 10px; /* 增加元素之间的间距 */
 }
 
 label {
@@ -59,8 +59,8 @@ label {
   white-space: nowrap;
 }
 
-input[type="text"] {
-  flex-grow: 1;  /* 让输入框尽量扩展 */
+input[type='text'] {
+  flex-grow: 1; /* 让输入框尽量扩展 */
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -69,7 +69,7 @@ input[type="text"] {
 
 button {
   padding: 8px 12px;
-  background-color: #4CAF50;  /* 绿色按钮 */
+  background-color: #4caf50; /* 绿色按钮 */
   color: white;
   border: none;
   border-radius: 4px;
@@ -78,7 +78,7 @@ button {
 }
 
 button:hover {
-  background-color: #45a049;  /* 按钮的悬停效果 */
+  background-color: #45a049; /* 按钮的悬停效果 */
 }
 
 #status {
@@ -101,7 +101,7 @@ button:hover {
   opacity: 0.1;
 }
 
-.apiKeyUrl{
+.apiKeyUrl {
   margin-left: 5px;
 }
 
