@@ -8,39 +8,46 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 let apiKey = null;
+let v2token = null;
 
 chrome.runtime.onInstalled.addListener(() => {
   console.log('Extension installed');
-  // 初始化 Apikey
-  getApikey((result) => {
-    apiKey = result;
-  });
+  initializeKeys();
 });
 
-// 函数用于动态获取 apikey
-function getApikey(callback) {
-  chrome.storage.sync.get(['apikey'], (result) => {
-    if (result.apikey) {
-      console.log('已获取到 Apikey: ', result.apikey);
-      if (callback) {
-        callback(result.apikey);
+// 通用函数用于从 chrome storage 中获取值
+function getStorageValue(key) {
+  return new Promise((resolve) => {
+    chrome.storage.sync.get([key], (result) => {
+      if (result[key]) {
+        console.log(`已获取到 ${key}:`, result[key]);
+        resolve(result[key]);
+      } else {
+        console.log(`未找到已保存的 ${key}`);
+        resolve(null);
       }
-    } else {
-      console.log('未找到已保存的 Apikey');
-      if (callback) {
-        callback(null);
-      }
-    }
+    });
   });
 }
+
+// 初始化 API key 和 V2 token
+async function initializeKeys() {
+  [apiKey, v2token] = await Promise.all([
+    getStorageValue('apikey'),
+    getStorageValue('v2token'),
+  ]);
+}
+
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === 'FETCH_DATA') {
     console.log('接收到消息请求:', request);
-
     // 使用异步函数来处理数据获取
     (async () => {
       try {
+        if(!apiKey && !v2token) {
+          await initializeKeys();
+        }
         const data = await genimiAnalysis(request.payload.topicId);
         // 返回结果给 content.js
         sendResponse({ success: true, data });
@@ -83,7 +90,7 @@ async function fetchFromV2EX(endpoint) {
   return fetch(endpoint, {
     method: 'GET',
     headers: {
-      Authorization: 'Bearer ac1d9a0f-21e2-44b9-9154-07946169bf0a',
+      Authorization: 'Bearer ' + v2token,
     },
   })
     .then((response) => response.json())
@@ -143,11 +150,6 @@ async function postAnalysis(prompt) {
   ],
 }
 `;
-
-  // 用户未定义APIKey使用默认值
-  if (apiKey === null || apiKey === '') {
-    apiKey = 'AIzaSyCjn3NLcHXn3YySI5MNGkX1bVyZKhGoVdY';
-  }
 
   const genAI = new GoogleGenerativeAI(apiKey);
   const model = genAI.getGenerativeModel({

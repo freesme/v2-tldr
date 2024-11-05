@@ -1,4 +1,4 @@
-/* normalize css starts here */
+/* Normalize CSS */
 *,
 *::before,
 *::after {
@@ -6,107 +6,133 @@
   padding: 0;
   box-sizing: border-box;
 }
-/* normalize css ends here */
 
-html {
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial,
-    sans-serif;
-  color: #222;
-}
-
-body {
-  width: 350px;
-  height: 150px;
+/* Basic styling */
+html, body {
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif;
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  background-color: #f9fafc;
+  margin: 0;
 }
 
 .app {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  text-align: center;
+  width: 100%;
+  max-width: 360px;
   padding: 20px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
-.title {
-  font-size: 18px;
+h2 {
+  font-size: 20px;
   font-weight: 600;
-  margin-bottom: 10px;
+  margin-bottom: 16px;
 }
 
 .subtitle {
   font-size: 12px;
+  color: #666;
 }
 
 code {
   font-size: 12px;
-  font-family: inherit;
   background-color: rgba(254, 237, 185, 0.3);
   padding: 2px 4px;
-  border-radius: 2px;
+  border-radius: 4px;
+  margin-right: 4px;
 }
 
-form {
+.apiKeyUrl {
+  color: #0066cc;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.apiKeyUrl:hover {
+  text-decoration: underline;
+}
+
+/* Form Styling */
+#appkey-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.form-group {
   display: flex;
   align-items: center;
-  gap: 10px; /* 增加元素之间的间距 */
+  gap: 10px;
 }
 
 label {
-  font-weight: bold;
-  font-size: 0.9em;
-  white-space: nowrap;
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  color: #444;
 }
 
-input[type='text'] {
-  flex-grow: 1; /* 让输入框尽量扩展 */
+input[type="text"] {
+  flex: 2;
   padding: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
   border-radius: 4px;
-  box-sizing: border-box;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+input[type="text"]:focus {
+  border-color: #4CAF50;
+  outline: none;
+  box-shadow: 0 0 4px rgba(76, 175, 80, 0.2);
+}
+
+/* Save Button */
+.button-group {
+  display: flex;
+  justify-content: center;
 }
 
 button {
-  padding: 8px 12px;
-  background-color: #4caf50; /* 绿色按钮 */
+  padding: 10px;
+  background-color: #4CAF50;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background-color 0.3s, transform 0.1s;
+  width: 100%;
 }
 
 button:hover {
-  background-color: #45a049; /* 按钮的悬停效果 */
+  background-color: #45a049;
+  transform: scale(1.03);
 }
 
-#status {
-  color: green;
-  font-size: 0.9em;
-}
-
-.button:focus {
+button:focus {
   outline: none;
 }
 
-.button:hover {
-  transform: scale(1.1);
-}
-
+/* Divider */
 .divider {
-  margin: 5px auto 5px;
-  width: 50px;
-  border: 0.5px dashed #000;
-  opacity: 0.1;
+  margin: 10px auto;
+  width: 60%;
+  border-top: 1px solid #e0e0e0;
 }
 
-.apiKeyUrl {
-  margin-left: 5px;
-}
-
+/* Status Message */
 #status {
-  height: 10px;
-  color: green;
-  font-size: 0.9em;
+  color: #4CAF50;
+  font-size: 12px;
+  margin-top: 10px;
 }
