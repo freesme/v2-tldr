@@ -38,27 +38,22 @@ async function initializeKeys() {
   ]);
 }
 
-
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === 'FETCH_DATA') {
     console.log('接收到消息请求:', request);
     // 使用异步函数来处理数据获取
     (async () => {
       try {
-        if(!apiKey && !v2token) {
+        if (!apiKey && !v2token) {
           await initializeKeys();
         }
         const data = await genimiAnalysis(request.payload.topicId);
+        console.log('获取数据成功:', data);
         // 返回结果给 content.js
         sendResponse({ success: true, data });
       } catch (error) {
         console.error('获取数据时出错:', JSON.stringify(error));
-
-        if (error.errorDetails[0].reason === 'API_KEY_INVALID') {
-          sendResponse({ success: false, error: 'API_KEY_INVALID' });
-        } else {
-          sendResponse({ success: false, error: error });
-        }
+        sendResponse({ success: false, error: error });
       }
     })();
     // 返回 true 表示 sendResponse 是异步调用
@@ -136,9 +131,10 @@ function buildPrompt(topic, content, comments) {
  * @returns {Promise<any>} 返回分析结果
  */
 async function postAnalysis(prompt) {
-  const systemInstruction = `你是一个地球上最厉害的话题评论分析总结机器人，注意严谨分析，我将会使用json格式给你发送
+  const systemInstruction = `帮助我总结文本内容，注意严谨分析，不要掺杂不存在的内容，我将会使用json格式给你发送
 话题的主题（topic），话题内容（content），和评论（comments）,需要总结【5】种评论的观点
-你需要将主题和内容分析总结，对评论进行观点情感分析总结，并估算观点倾向的占比，然后将结果以json格式文本返回给我，不要添加格式说明前缀，返回结果json的格式及要求是：
+你需要将主题和内容分析总结，对评论进行观点情感分析总结，并估算观点倾向的占比，然后将结果以json格式字符串返回给我，***结果去除json格式声明前缀 \`\`\`json ***，
+返回结果json格式及要求：
 {
   "topic": "题目和题目内容内容的分析总结",
   "comments": [
@@ -160,9 +156,12 @@ async function postAnalysis(prompt) {
   console.log('Generating content...', apiKey);
 
   const result = await model.generateContent(prompt);
-  console.log('Gemini response:', result);
-
-  let message = result.response.text();
-  // 解析为json
-  return JSON.parse(message);
+  console.log('Gemini response result:', JSON.stringify(result));
+  let messageJsonStr = result.response.text();
+  console.log('Gemini response jsonStr:', messageJsonStr);
+  let messageJson = messageJsonStr.replace(/```json|```/g, '');
+  console.log('Gemini response messageJson:', messageJson);
+  let parse = JSON.parse(messageJson);
+  console.log('Gemini response parse:', parse);
+  return parse;
 }
